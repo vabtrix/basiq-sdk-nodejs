@@ -160,6 +160,18 @@ const BasiqUser = function (session) {
         });
     };
 
+    this.fetchAccount = function (accountId) {
+        return new Promise(function (res, rej) {
+            return session.getToken().then(function () {
+                return session.API.send("users/" + self.data.id + "/accounts/" + accountId , "GET");
+            }).then(function (body) {
+                res(body);
+            }).catch(function (err) {
+                rej(err);
+            });
+        });
+    };
+
     this.fetchTransactions = function (connectionId) {
         return new Promise(function (res, rej) {
             return session.getToken().then(function () {
@@ -174,6 +186,18 @@ const BasiqUser = function (session) {
                 }).catch(function (err) {
                     rej(err);
                 });
+            });
+        });
+    };
+
+    this.fetchTransaction = function (transactionId) {
+        return new Promise(function (res, rej) {
+            return session.getToken().then(function () {
+                return session.API.send("users/" + self.data.id + "/transactions/" + transactionId , "GET");
+            }).then(function (body) {
+                res(body);
+            }).catch(function (err) {
+                rej(err);
             });
         });
     };

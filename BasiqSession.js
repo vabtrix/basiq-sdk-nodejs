@@ -52,6 +52,30 @@ const BasiqSession = function (apiKey) {
         return new BasiqUser(self).for(id);
     };
 
+    this.getInstitutons = function () {
+        return new Promise(function (res, rej) {
+            return self.getToken().then(function () {
+                return self.API.send("institutions" , "GET");
+            }).then(function (body) {
+                res(body);
+            }).catch(function (err) {
+                rej(err);
+            });
+        });
+    };
+
+    this.getInstituton = function (institutionId) {
+        return new Promise(function (res, rej) {
+            return self.getToken().then(function () {
+                return self.API.send("institutions/" + institutionId , "GET");
+            }).then(function (body) {
+                res(body);
+            }).catch(function (err) {
+                rej(err);
+            });
+        });
+    };
+
     return new Promise(function (res, rej) {
         self.getToken().then(function () {
             res(self);
