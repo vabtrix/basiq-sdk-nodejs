@@ -9,6 +9,7 @@
     },
     "extends": "eslint:recommended",
     "rules": {
+        "no-warning-comments": "warn",
         "indent": [
             "error",
             4

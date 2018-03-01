@@ -43,22 +43,21 @@ const BasiqConnection = function (session, user) {
         }
 
         return new Promise(function (res, rej) {
-            return session.getToken().then(function (status) {
-                session.API.send("users/" + user.data.id + "/connections", "POST", payload).then(function (body) {
-                    if (!body.id) {
-                        rej("Invalid API response: " + JSON.stringify(body));
-                    }
-                    (new BasiqJob(session)).get(body.id).then(function (job) {
+            return session.getToken().then(function () {
+                return session.API.send("users/" + user.data.id + "/connections", "POST", payload);
+            }).then(function (body) {
+                if (!body.id) {
+                    rej("Invalid API response: " + JSON.stringify(body));
+                }
+                (new BasiqJob(session)).get(body.id).then(function (job) {
 
-                        self.data.job = job;
-                        self.data.id = job.getConnectionId();
+                    self.data.job = job;
+                    self.data.id = job.getConnectionId();
 
-                        res(self);
-                    });
-
-                }).catch(function (err) {
-                    rej(err);
+                    res(self);
                 });
+            }).catch(function (err) {
+                rej(err);
             });
         });
     };
@@ -69,27 +68,103 @@ const BasiqConnection = function (session, user) {
         }
 
         return new Promise(function (res, rej) {
-            return session.getToken().then(function (status) {
-                session.API.send("users/" + user.data.id + "/connections/" + id, "GET").then(function (body) {
-                    if (!body.id) {
-                        rej("Invalid API response: " + JSON.stringify(body));
-                    }
+            return session.getToken().then(function () {
+                return session.API.send("users/" + user.data.id + "/connections/" + id, "GET");
+            }).then(function (body) {
+                if (!body.id) {
+                    rej("Invalid API response: " + JSON.stringify(body));
+                }
 
-                    self.data = body;
-                    res(self);
-                }).catch(function (err) {
-                    rej(err);
-                });
+                self.data = body;
+                res(self);
+            }).catch(function (err) {
+                rej(err);
             });
         });
     };
 
-    this.for = function (id) {
+
+    this.update = function (password, securityCode) {
+        if (!password) {
+            throw new Error("No password provided for connection update");
+        }
+
+        if (!self.institution.id) {
+            throw new Error("No institution id set for connection");
+        }
+
+        const payload = {
+            password: password,
+            institution: {
+                id: self.data.institution.id
+            }
+        };
+
+        if (securityCode && securityCode.length > 0) {
+            payload["securityCode"] = securityCode;
+        }
+
+        return new Promise(function (res, rej) {
+            return session.getToken().then(function () {
+                return session.API.send("users/" + user.data.id + "/connections/" + self.data.id, "POST", payload);
+            }).then(function (body) {
+                if (!body.id) {
+                    rej("Invalid API response: " + JSON.stringify(body));
+                }
+
+                self.data = body;
+                res(self);
+            }).catch(function (err) {
+                rej(err);
+            });
+        });
+    };
+
+    this.delete = function () {
+        return new Promise(function (res, rej) {
+            return session.getToken().then(function () {
+                return session.API.send("users/" + user.data.id + "/connections/" + self.data.id, "DELETE");
+            }).then(function () {
+                res(null);
+            }).catch(function (err) {
+                rej(err);
+            });
+        });
+    };
+    
+    this.refresh = function () {
+        return new Promise(function (res, rej) {
+            return session.getToken().then(function () {
+                return session.API.send("users/" + user.data.id + "/connections/" + self.data.id + "/refresh", "POST");
+            }).then(function (body) {
+                if (!body.id) {
+                    rej("Invalid API response: " + JSON.stringify(body));
+                }
+                (new BasiqJob(session)).get(body.id).then(function (job) {
+
+                    self.data.job = job;
+                    self.data.id = job.getConnectionId();
+
+                    res(self);
+                });
+            }).catch(function (err) {
+                rej(err);
+            });
+        });
+    };
+
+    this.for = function (id, institutionId) {
         if (!id) {
             throw new Error("No connection id provided");
         }
 
         self.data.id = id;
+
+        if (institutionId) {
+            self.data.institution = {
+                id: institutionId
+            };
+        }
 
         return self;
     };
@@ -134,11 +209,17 @@ const BasiqConnection = function (session, user) {
         return job.getCurrentStep().title === "retrieve-accounts" && job.getCurrentStep().status === "success";
     };
 
-    this.waitForCredentials = function () {
+    this.waitForCredentials = function (timeout, waitTime) {
         let job;
 
         return new Promise(async function (res, rej) {
             const check = async function (i) {
+                if (i * waitTime > timeout) {
+                    return rej({
+                        error: true,
+                        errorMessage: "The operation has timed out"
+                    });
+                }
                 if (i > 0) {
                     job = await self.data.job.refreshJobData();
                 } else {
@@ -150,16 +231,14 @@ const BasiqConnection = function (session, user) {
                     return res(credentialsStep.status === "success");
                 }
 
-                setTimeout(check.bind(null, ++i), 1500)
+                setTimeout(check.bind(null, ++i), waitTime);
             };
 
-            setTimeout(check.bind(null, 0), 0)
-        })
-
+            setTimeout(check.bind(null, 0), 0);
+        });
     };
 
     return this;
-
 };
 
 module.exports = BasiqConnection;

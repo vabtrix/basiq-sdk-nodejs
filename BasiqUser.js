@@ -20,7 +20,7 @@ const BasiqUser = function (session) {
 
 
         return new Promise(function (res, rej) {
-            return session.getToken().then(function (status) {
+            return session.getToken().then(function () {
                 session.API.send("users", "POST", data).then(function (body) {
                     self.data.id = body.id;
                     self.data.email = body.email;
@@ -41,11 +41,9 @@ const BasiqUser = function (session) {
 
 
         return new Promise(function (res, rej) {
-            return session.getToken().then(function (status) {
+            return session.getToken().then(function () {
                 session.API.send("users/" + id, "GET").then(function (body) {
-                    self.data.id = body.id;
-                    self.data.email = body.email;
-                    self.data.mobile = body.mobile;
+                    self.data = body;
 
                     res(self);
                 }).catch(function (err) {
@@ -67,39 +65,39 @@ const BasiqUser = function (session) {
 
     this.update = function (data) {
         if (!self.data.id) {
-            throw new Error("User has not been initialized")
+            throw new Error("User has not been initialized");
         }
 
         return new Promise(function (res, rej) {
-            return session.getToken().then(function (status) {
-                session.API.send("users/" + self.data.id, "POST", data).then(function (body) {
-                    if (!body.id) {
-                        rej("Invalid API response: " + JSON.stringify(body));
-                    }
-                    self.data.id = body.id;
-                    self.data.email = body.email;
-                    self.data.mobile = body.mobile;
+            return session.getToken().then(function () {
+                return session.API.send("users/" + self.data.id, "POST", data);
+            }).then(function (body) {
+                if (!body.id) {
+                    rej("Invalid API response: " + JSON.stringify(body));
+                }
+                self.data.id = body.id;
+                self.data.email = body.email;
+                self.data.mobile = body.mobile;
 
-                    res(self);
-                }).catch(function (err) {
-                    rej(err);
-                });
+                res(self);
+            }).catch(function (err) {
+                rej(err);
             });
         });
     };
 
     this.delete = function () {
         if (!self.data.id) {
-            throw new Error("User has not been initialized")
+            throw new Error("User has not been initialized");
         }
 
         return new Promise(function (res, rej) {
-            return session.getToken().then(function (status) {
-                session.API.send("users/" + self.data.id, "DELETE").then(function () {
-                    res(true);
-                }).catch(function (err) {
-                    rej(err);
-                });
+            return session.getToken().then(function () {
+                return session.API.send("users/" + self.data.id, "DELETE");
+            }).then(function () {
+                res(true);
+            }).catch(function (err) {
+                rej(err);
             });
         });
     };
@@ -112,9 +110,41 @@ const BasiqUser = function (session) {
         return new BasiqConnection(session, self).get(id);
     };
 
+    this.getAllConnections = function () {
+        return new Promise(function (res, rej) {
+            return session.getToken().then(function () {
+                return session.API.send("users/" + self.data.id + "/connections", "GET");
+            }).then(function (body) {
+                if (!body.id) {
+                    rej("Invalid API response: " + JSON.stringify(body));
+                }
+
+                res(body);
+            }).catch(function (err) {
+                rej(err);
+            });
+        });
+    };
+
+    this.refreshConnections = function () {
+        return new Promise(function (res, rej) {
+            return session.getToken().then(function () {
+                return session.API.send("users/" + self.data.id + "/connections/refresh", "POST");
+            }).then(function (body) {
+                if (!body.data) {
+                    rej("Invalid API response: " + JSON.stringify(body));
+                }
+
+                res(body.data);
+            }).catch(function (err) {
+                rej(err);
+            });
+        });
+    };
+
     this.fetchAccounts = function (connectionId) {
         return new Promise(function (res, rej) {
-            return session.getToken().then(function (status) {
+            return session.getToken().then(function () {
                 let url = "users/" + self.data.id + "/accounts";
 
                 if (connectionId) {
@@ -132,7 +162,7 @@ const BasiqUser = function (session) {
 
     this.fetchTransactions = function (connectionId) {
         return new Promise(function (res, rej) {
-            return session.getToken().then(function (status) {
+            return session.getToken().then(function () {
                 let url = "users/" + self.data.id + "/transactions";
 
                 if (connectionId) {

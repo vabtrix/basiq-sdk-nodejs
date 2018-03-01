@@ -16,15 +16,14 @@ const BasiqJob = function (session) {
         }
 
         return new Promise(function (res, rej) {
-            return session.getToken().then(function (status) {
-                session.API.send("jobs/" + id, "GET").then(function (body) {
-                    self.data = body;
+            return session.getToken().then(function () {
+                return session.API.send("jobs/" + id, "GET");
+            }).then(function (body) {
+                self.data = body;
 
-                    res(self);
-                }).catch(function(err) {
-                    console.error(err);
-                    rej(err);
-                });
+                res(self);
+            }).catch(function(err) {
+                rej(err);
             });
         });
     };
@@ -56,8 +55,8 @@ const BasiqJob = function (session) {
     };
 
     this.getConnectionId = function () {
-        return self.data.links.source.substr(self.data.links.source.lastIndexOf("/") + 1)
-    }
+        return self.data.links.source.substr(self.data.links.source.lastIndexOf("/") + 1);
+    };
 };
 
 module.exports = BasiqJob;

@@ -53,8 +53,10 @@ const BasiqSession = function (apiKey) {
     };
 
     return new Promise(function (res, rej) {
-        self.getToken().then(function (status) {
+        self.getToken().then(function () {
             res(self);
+        }).catch(function (err) {
+            rej(err);
         });
     });
 };
