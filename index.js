@@ -1,2 +1,0 @@
-const BasiqSession = require("./BasiqSession");
-

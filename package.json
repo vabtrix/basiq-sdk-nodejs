@@ -4,6 +4,7 @@
   "description": "SDK Package for Basiq's API",
   "main": "index.js",
   "scripts": {
+    "build": "./node_modules/uglify-es/bin/uglifyjs --compress --mangle -- index.js BasiqUser.js BasiqSession.js BasiqJob.js BasiqConnection.js helpers/API.js",
     "lint": "./node_modules/.bin/eslint .",
     "test": "test"
   },
@@ -18,6 +19,7 @@
     "request": "^2.83.0"
   },
   "devDependencies": {
-    "eslint": "^4.18.1"
+    "eslint": "^4.18.1",
+    "uglify-es": "^3.3.9"
   }
 }
