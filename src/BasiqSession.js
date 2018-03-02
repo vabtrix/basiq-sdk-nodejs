@@ -1,9 +1,9 @@
 const API = require("./helpers/API"),
     BasiqUser = require("./BasiqUser");
 
-const BasiqSession = function (apiKey) {
+const Session = function (apiKey) {
     if (!this) {
-        return new BasiqSession(apiKey);
+        return new Session(apiKey);
     }
 
     let token = null;
@@ -85,4 +85,4 @@ const BasiqSession = function (apiKey) {
     });
 };
 
-module.exports = BasiqSession;
+module.exports = Session;

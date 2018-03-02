@@ -1,6 +1,6 @@
 const BasiqJob = require("./BasiqJob");
 
-const BasiqConnection = function (session, user) {
+const Connection = function (session, user) {
     if (!session) {
         throw new Error("No session provided");
     }
@@ -241,4 +241,4 @@ const BasiqConnection = function (session, user) {
     return this;
 };
 
-module.exports = BasiqConnection;
+module.exports = Connection;

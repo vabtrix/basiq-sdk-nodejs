@@ -1,14 +1,27 @@
 const path = require("path"),
+    fs = require("fs"),
     webpack = require("webpack");
 
+const nodeModules = {};
+
+fs.readdirSync('node_modules')
+    .filter(function(x) {
+        return ['.bin'].indexOf(x) === -1;
+    })
+    .forEach(function(mod) {
+        nodeModules[mod] = 'commonjs ' + mod;
+    });
+
+
 module.exports = {
-    entry: "./index.js",
-    devtool: "source-map",
+    entry: './src/index.js',
+    target: 'node',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: "bundle.min.js"
+        filename: 'index.js',
+        library: 'library',
+        libraryTarget: 'umd'
     },
-    plugins: [
-        new webpack.optimize.UglifyJsPlugin({minimize: true})
-    ]
+    externals: nodeModules,
+    devtool: 'sourcemap'
 };

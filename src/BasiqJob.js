@@ -1,4 +1,4 @@
-const BasiqJob = function (session) {
+const Job = function (session) {
 
     const self = this;
 
@@ -59,4 +59,4 @@ const BasiqJob = function (session) {
     };
 };
 
-module.exports = BasiqJob;
+module.exports = Job;

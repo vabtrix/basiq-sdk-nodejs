@@ -1,6 +1,6 @@
 const BasiqConnection = require("./BasiqConnection");
 
-const BasiqUser = function (session) {
+const User = function (session) {
     if (!session) {
         throw new Error("No session provided");
     }
@@ -205,4 +205,4 @@ const BasiqUser = function (session) {
     return self;
 };
 
-module.exports = BasiqUser;
+module.exports = User;

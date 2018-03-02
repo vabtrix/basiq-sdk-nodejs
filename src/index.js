@@ -3,5 +3,5 @@ module.exports = {
     BasiqUser: require("./BasiqUser"),
     BasiqConnection: require("./BasiqConnection"),
     BasiqJob: require("./BasiqJob")
-}
+};
 
