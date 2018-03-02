@@ -21,15 +21,13 @@ const User = function (session) {
 
         return new Promise(function (res, rej) {
             return session.getToken().then(function () {
-                session.API.send("users", "POST", data).then(function (body) {
-                    self.data.id = body.id;
-                    self.data.email = body.email;
-                    self.data.mobile = body.mobile;
+                return session.API.send("users", "POST", data);
+            }).then(function (body) {
+                self.data = body;
 
-                    res(self);
-                }).catch(function (err) {
-                    rej(err);
-                });
+                res(self);
+            }).catch(function (err) {
+                rej(err);
             });
         });
     };
@@ -42,13 +40,13 @@ const User = function (session) {
 
         return new Promise(function (res, rej) {
             return session.getToken().then(function () {
-                session.API.send("users/" + id, "GET").then(function (body) {
-                    self.data = body;
+                return session.API.send("users/" + id, "GET");
+            }).then(function (body) {
+                self.data = body;
 
-                    res(self);
-                }).catch(function (err) {
-                    rej(err);
-                });
+                res(self);
+            }).catch(function (err) {
+                rej(err);
             });
         });
     };
