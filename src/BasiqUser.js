@@ -104,10 +104,6 @@ const User = function (session) {
         return new BasiqConnection(session, self).new(institutionId, loginId, password, securityCode);
     };
 
-    this.getConnection = function (id) {
-        return new BasiqConnection(session, self).get(id);
-    };
-
     this.getAllConnections = function () {
         return new Promise(function (res, rej) {
             return session.getToken().then(function () {

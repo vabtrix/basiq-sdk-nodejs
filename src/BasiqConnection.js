@@ -49,12 +49,8 @@ const Connection = function (session, user) {
                 if (!body.id) {
                     rej("Invalid API response: " + JSON.stringify(body));
                 }
-                (new BasiqJob(session)).get(body.id).then(function (job) {
-
-                    self.data.job = job;
-                    self.data.id = job.getConnectionId();
-
-                    res(self);
+                (new BasiqJob(session, self)).get(body.id).then(function (job) {
+                    res(job);
                 });
             }).catch(function (err) {
                 rej(err);
@@ -140,7 +136,7 @@ const Connection = function (session, user) {
                 if (!body.id) {
                     rej("Invalid API response: " + JSON.stringify(body));
                 }
-                (new BasiqJob(session)).get(body.id).then(function (job) {
+                (new BasiqJob(session, self)).get(body.id).then(function (job) {
 
                     self.data.job = job;
                     self.data.id = job.getConnectionId();
@@ -207,35 +203,6 @@ const Connection = function (session, user) {
         }
 
         return job.getCurrentStep().title === "retrieve-accounts" && job.getCurrentStep().status === "success";
-    };
-
-    this.waitForCredentials = function (timeout, waitTime) {
-        let job;
-
-        return new Promise(async function (res, rej) {
-            const check = async function (i) {
-                if (i * waitTime > timeout) {
-                    return rej({
-                        error: true,
-                        errorMessage: "The operation has timed out"
-                    });
-                }
-                if (i > 0) {
-                    job = await self.data.job.refreshJobData();
-                } else {
-                    job = self.data.job;
-                }
-                const credentialsStep = job.data.steps && job.data.steps[0];
-
-                if (credentialsStep.status && credentialsStep.status !== "in-progress" && credentialsStep.status !== "pending") {
-                    return res(credentialsStep.status === "success");
-                }
-
-                setTimeout(check.bind(null, ++i), waitTime);
-            };
-
-            setTimeout(check.bind(null, 0), 0);
-        });
     };
 
     return this;
