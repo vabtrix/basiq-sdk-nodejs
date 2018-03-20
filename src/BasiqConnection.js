@@ -47,7 +47,7 @@ const Connection = function (session, user) {
                 return session.API.send("users/" + user.data.id + "/connections", "POST", payload);
             }).then(function (body) {
                 if (!body.id) {
-                    rej("Invalid API response: " + JSON.stringify(body));
+                    rej(body);
                 }
                 (new BasiqJob(session, self)).get(body.id).then(function (job) {
                     res(job);
@@ -68,7 +68,7 @@ const Connection = function (session, user) {
                 return session.API.send("users/" + user.data.id + "/connections/" + id, "GET");
             }).then(function (body) {
                 if (!body.id) {
-                    rej("Invalid API response: " + JSON.stringify(body));
+                    rej(body);
                 }
 
                 self.data = body;
@@ -105,7 +105,7 @@ const Connection = function (session, user) {
                 return session.API.send("users/" + user.data.id + "/connections/" + self.data.id, "POST", payload);
             }).then(function (body) {
                 if (!body.id) {
-                    rej("Invalid API response: " + JSON.stringify(body));
+                    rej(body);
                 }
 
                 self.data = body;
@@ -134,7 +134,7 @@ const Connection = function (session, user) {
                 return session.API.send("users/" + user.data.id + "/connections/" + self.data.id + "/refresh", "POST");
             }).then(function (body) {
                 if (!body.id) {
-                    rej("Invalid API response: " + JSON.stringify(body));
+                    rej(body);
                 }
                 (new BasiqJob(session, self)).get(body.id).then(function (job) {
 

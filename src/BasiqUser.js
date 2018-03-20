@@ -71,7 +71,7 @@ const User = function (session) {
                 return session.API.send("users/" + self.data.id, "POST", data);
             }).then(function (body) {
                 if (!body.id) {
-                    rej("Invalid API response: " + JSON.stringify(body));
+                    rej(body);
                 }
                 self.data.id = body.id;
                 self.data.email = body.email;
@@ -110,7 +110,7 @@ const User = function (session) {
                 return session.API.send("users/" + self.data.id + "/connections", "GET");
             }).then(function (body) {
                 if (!body.id) {
-                    rej("Invalid API response: " + JSON.stringify(body));
+                    rej(body);
                 }
 
                 res(body);

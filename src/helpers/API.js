@@ -1,4 +1,5 @@
-const request = require("request");
+const request = require("request"),
+    Error = require("../errors/Error");
 
 require("request").debug = true;
 
@@ -34,9 +35,9 @@ API.prototype.send = function (path, method, data) {
         request(options, function (error, response, body) {
             if (error || response.statusCode > 299) {
                 if (error) {
-                    return rej(JSON.parse(error));
+                    return rej(error);
                 } else {
-                    return rej(JSON.parse(body));
+                    return rej(new Error(body, response.statusCode));
                 }
             }
             res(JSON.parse(body));
