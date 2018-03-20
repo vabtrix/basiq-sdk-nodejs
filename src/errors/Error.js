@@ -16,9 +16,9 @@ function Error(body, statusCode) {
     }
 
     this.statusCode = statusCode;
-    this.data = data.data;
+    this.response = data;
     this.message = data.data.reduce(function (acc, curr) {
-        return acc += curr.detail + " "
+        return acc += curr.detail + " ";
     }, "").trim();
 }
 
