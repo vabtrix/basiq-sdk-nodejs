@@ -47,6 +47,7 @@ function FilterBuilder(filters) {
 
     this.setFilter = function (filters) {
         self.filters = filters;
+        return self;
     };
 
     return this;
