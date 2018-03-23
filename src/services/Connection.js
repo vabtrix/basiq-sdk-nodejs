@@ -1,6 +1,30 @@
-const BasiqJob = require("./BasiqJob");
+const BasiqJob = require("./Job");
 
-const Connection = function (session, user) {
+const Connection = function (data, service) {
+    this.id = data.id ? data.id : null;
+
+    const self = this;
+
+    /**
+     * @type ConnectionService
+     */
+    this.service = service;
+
+    this.update = function (password, securityCode) {
+        return self.service.update(self, password, securityCode);
+    };
+
+    this.refresh = function () {
+        return self.service.refresh(self);
+    };
+
+    this.delete = function () {
+        return self.service.delete(self);
+    };
+
+};
+
+const ConnectionService = function (session, user) {
     if (!session) {
         throw new Error("No session provided");
     }
@@ -44,14 +68,12 @@ const Connection = function (session, user) {
 
         return new Promise(function (res, rej) {
             return session.getToken().then(function () {
-                return session.API.send("users/" + user.data.id + "/connections", "POST", payload);
+                return session.API.send("users/" + user.id + "/connections", "POST", payload);
             }).then(function (body) {
                 if (!body.id) {
                     rej(body);
                 }
-                (new BasiqJob(session, self)).get(body.id).then(function (job) {
-                    res(job);
-                });
+                res((new BasiqJob(session, self).for(body)));
             }).catch(function (err) {
                 rej(err);
             });
@@ -65,14 +87,13 @@ const Connection = function (session, user) {
 
         return new Promise(function (res, rej) {
             return session.getToken().then(function () {
-                return session.API.send("users/" + user.data.id + "/connections/" + id, "GET");
+                return session.API.send("users/" + user.id + "/connections/" + id, "GET");
             }).then(function (body) {
                 if (!body.id) {
                     rej(body);
                 }
 
-                self.data = body;
-                res(self);
+                res(new Connection(body, self));
             }).catch(function (err) {
                 rej(err);
             });
@@ -80,12 +101,12 @@ const Connection = function (session, user) {
     };
 
 
-    this.update = function (password, securityCode) {
+    this.update = function (connection, password, securityCode) {
         if (!password) {
             throw new Error("No password provided for connection update");
         }
 
-        if (!self.institution.id) {
+        if (!connection.institution.id) {
             throw new Error("No institution id set for connection");
         }
 
@@ -102,24 +123,23 @@ const Connection = function (session, user) {
 
         return new Promise(function (res, rej) {
             return session.getToken().then(function () {
-                return session.API.send("users/" + user.data.id + "/connections/" + self.data.id, "POST", payload);
+                return session.API.send("users/" + user.id + "/connections/" + self.data.id, "POST", payload);
             }).then(function (body) {
                 if (!body.id) {
                     rej(body);
                 }
 
-                self.data = body;
-                res(self);
+                res((new BasiqJob(session, self).for(body)));
             }).catch(function (err) {
                 rej(err);
             });
         });
     };
 
-    this.delete = function () {
+    this.delete = function (connection) {
         return new Promise(function (res, rej) {
             return session.getToken().then(function () {
-                return session.API.send("users/" + user.data.id + "/connections/" + self.data.id, "DELETE");
+                return session.API.send("users/" + user.id + "/connections/" + connection.id, "DELETE");
             }).then(function () {
                 res(null);
             }).catch(function (err) {
@@ -127,22 +147,17 @@ const Connection = function (session, user) {
             });
         });
     };
-    
-    this.refresh = function () {
+
+    this.refresh = function (connection) {
         return new Promise(function (res, rej) {
             return session.getToken().then(function () {
-                return session.API.send("users/" + user.data.id + "/connections/" + self.data.id + "/refresh", "POST");
+                return session.API.send("users/" + user.id + "/connections/" + connection.id + "/refresh", "POST");
             }).then(function (body) {
                 if (!body.id) {
                     rej(body);
                 }
-                (new BasiqJob(session, self)).get(body.id).then(function (job) {
 
-                    self.data.job = job;
-                    self.data.id = job.getConnectionId();
-
-                    res(self);
-                });
+                res((new BasiqJob(session, self).get(body.id)));
             }).catch(function (err) {
                 rej(err);
             });
@@ -154,58 +169,19 @@ const Connection = function (session, user) {
             throw new Error("No connection id provided");
         }
 
-        self.data.id = id;
+        const data = {id: id};
 
         if (institutionId) {
-            self.data.institution = {
+            data.institution = {
                 id: institutionId
             };
         }
 
-        return self;
+        return new Connection(data, self);
     };
 
-    this.getJobStatus = function () {
-        if (!self.data.job) {
-            throw new Error("Job is not initialized");
-        }
-
-        return self.data.job.refreshJobData();
-    };
-
-    this.canFetchTransactions = async function (reload) {
-        if (!self.data.job) {
-            throw new Error("Job is not initialized");
-        }
-
-        let job;
-
-        if (reload) {
-            job = await self.data.job.refreshJobData();
-        } else {
-            job = self.data.job;
-        }
-
-        return job.getCurrentStep().title === "retrieve-accounts" || job.getCurrentStep().title === "retrieve-transactions";
-    };
-
-    this.canFetchAccounts = async function (reload) {
-        if (!self.data.job) {
-            throw new Error("Job is not initialized");
-        }
-
-        let job;
-
-        if (reload) {
-            job = await self.data.job.refreshJobData();
-        } else {
-            job = self.data.job;
-        }
-
-        return job.getCurrentStep().title === "retrieve-accounts" && job.getCurrentStep().status === "success";
-    };
 
     return this;
 };
 
-module.exports = Connection;
+module.exports = ConnectionService;

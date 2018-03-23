@@ -1,6 +1,6 @@
 # Basiq.io Node.js SDK
 
-This is the documentation for the Golang SDK for Basiq.io API
+This is the documentation for the Node.js SDK for Basiq.io API
 
 ## Introduction
 

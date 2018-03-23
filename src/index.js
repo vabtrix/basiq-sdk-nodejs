@@ -1,7 +1,7 @@
 module.exports = {
     BasiqSession: require("./BasiqSession"),
-    BasiqUser: require("./BasiqUser"),
-    BasiqConnection: require("./BasiqConnection"),
-    BasiqJob: require("./BasiqJob")
+    BasiqUser: require("./services/User"),
+    BasiqConnection: require("./services/Connection"),
+    BasiqJob: require("./services/Job")
 };
 

@@ -1,5 +1,5 @@
 const API = require("./helpers/API"),
-    BasiqUser = require("./BasiqUser");
+    BasiqUser = require("./services/User");
 
 const Session = function (apiKey) {
     if (!this) {
