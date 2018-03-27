@@ -1,7 +1,7 @@
 const request = require("request"),
     Error = require("../errors/Error");
 
-require("request").debug = true;
+//require("request").debug = true;
 
 const API = function(host) {
     this.options = {

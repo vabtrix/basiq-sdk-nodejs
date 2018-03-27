@@ -1,4 +1,5 @@
 const BasiqConnection = require("./Connection"),
+    TransactionList = require("./TransactionList"),
     FilterBuilder = require("../helpers/FilterBuilder");
 
 const User = function (data, service) {
@@ -226,7 +227,7 @@ const UserService = function (session) {
                 }
 
                 session.API.send(url , "GET").then(function (body) {
-                    res(body);
+                    res(new TransactionList(body, session));
                 }).catch(function (err) {
                     rej(err);
                 });
