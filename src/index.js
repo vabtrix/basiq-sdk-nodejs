@@ -1,7 +1,8 @@
 module.exports = {
-    BasiqSession: require("./BasiqSession"),
-    BasiqUser: require("./services/User"),
-    BasiqConnection: require("./services/Connection"),
-    BasiqJob: require("./services/Job")
+    Session: require("./BasiqSession"),
+    User: require("./services/User"),
+    Connection: require("./services/Connection"),
+    Job: require("./services/Job"),
+    FilterBuilder: require("./helpers/FilterBuilder")
 };
 

@@ -52,3 +52,5 @@ function FilterBuilder(filters) {
 
     return this;
 }
+
+module.exports = FilterBuilder;

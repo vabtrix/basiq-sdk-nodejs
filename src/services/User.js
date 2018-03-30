@@ -27,7 +27,7 @@ const User = function (data, service) {
     };
 
     this.refreshAllConnections = function () {
-        return self.service.refreshConnections(self);
+        return self.service.refreshAllConnections(self);
     };
 
     this.listAllConnections = function (filter) {
@@ -35,19 +35,19 @@ const User = function (data, service) {
     };
 
     this.getAccount = function (accountId) {
-        return self.service.fetchAccount(self, accountId);
+        return self.service.getAccount(self, accountId);
     };
 
     this.getAccounts = function (filter) {
-        return self.service.fetchAccounts(self, filter);
+        return self.service.getAccounts(self, filter);
     };
 
     this.getTransaction = function (transactionId) {
-        return self.service.fetchTransaction(self, transactionId);
+        return self.service.getTransaction(self, transactionId);
     };
 
     this.getTransactions = function (filter) {
-        return self.service.fetchTransactions(self, filter);
+        return self.service.getTransactions(self, filter);
     };
 
 };
@@ -163,7 +163,7 @@ const UserService = function (session) {
         });
     };
 
-    this.refreshConnections = function (user) {
+    this.refreshAllConnections = function (user) {
         return new Promise(function (res, rej) {
             return session.getToken().then(function () {
                 return session.API.send("users/" + user.id + "/connections/refresh", "POST");
@@ -179,7 +179,7 @@ const UserService = function (session) {
         });
     };
 
-    this.fetchAccounts = function (user, filter) {
+    this.getAccounts = function (user, filter) {
         return new Promise(function (res, rej) {
             return session.getToken().then(function () {
                 let url = "users/" + user.id + "/accounts";
@@ -201,7 +201,7 @@ const UserService = function (session) {
         });
     };
 
-    this.fetchAccount = function (user, accountId) {
+    this.getAccount = function (user, accountId) {
         return new Promise(function (res, rej) {
             return session.getToken().then(function () {
                 return session.API.send("users/" + user.id + "/accounts/" + accountId , "GET");
@@ -213,7 +213,7 @@ const UserService = function (session) {
         });
     };
 
-    this.fetchTransactions = function (user, filter) {
+    this.getTransactions = function (user, filter) {
         return new Promise(function (res, rej) {
             return session.getToken().then(function () {
                 let url = "users/" + user.id + "/transactions";
@@ -235,7 +235,7 @@ const UserService = function (session) {
         });
     };
 
-    this.fetchTransaction = function (user, transactionId) {
+    this.getTransaction = function (user, transactionId) {
         return new Promise(function (res, rej) {
             return session.getToken().then(function () {
                 return session.API.send("users/" + user.id + "/transactions/" + transactionId , "GET");

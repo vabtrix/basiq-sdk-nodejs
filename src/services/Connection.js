@@ -101,7 +101,7 @@ const ConnectionService = function (session, user) {
     };
 
 
-    this.update = function (connection, password, securityCode) {
+    this.update = function (connection, password) {
         if (!password) {
             throw new Error("No password provided for connection update");
         }
@@ -116,10 +116,6 @@ const ConnectionService = function (session, user) {
                 id: self.data.institution.id
             }
         };
-
-        if (securityCode && securityCode.length > 0) {
-            payload["securityCode"] = securityCode;
-        }
 
         return new Promise(function (res, rej) {
             return session.getToken().then(function () {
@@ -141,7 +137,7 @@ const ConnectionService = function (session, user) {
             return session.getToken().then(function () {
                 return session.API.send("users/" + user.id + "/connections/" + connection.id, "DELETE");
             }).then(function () {
-                res(null);
+                res(true);
             }).catch(function (err) {
                 rej(err);
             });

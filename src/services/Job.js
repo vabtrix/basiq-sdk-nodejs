@@ -62,10 +62,10 @@ const Job = function (data, service) {
 
 };
 
-const JobService = function (session, connection) {
+const JobService = function (session, connectionService) {
     const self = this;
 
-    this.connection = connection;
+    this.connectionService = connectionService;
 
     this.get = function (id) {
         if (!id) {
@@ -102,7 +102,7 @@ const JobService = function (session, connection) {
             connectionId = job.getConnectionId();
         }
 
-        return connection.get(connectionId);
+        return connectionService.get(connectionId);
     };
 
     this.waitForCredentials = function (job, interval, timeout) {
@@ -123,7 +123,7 @@ const JobService = function (session, connection) {
 
                 if (credentialsStep.status && credentialsStep.status !== "in-progress" && credentialsStep.status !== "pending") {
                     if (credentialsStep.status === "success") {
-                        return res(connection.get(job.getConnectionId()));
+                        return res(connectionService.get(job.getConnectionId()));
                     }
 
                     return res(null);
