@@ -13,10 +13,13 @@
     "sdk",
     "nodejs"
   ],
-  "files": ["dist/"],
+  "files": [
+    "dist/"
+  ],
   "author": "Basiq.io",
   "license": "ISC",
   "dependencies": {
+    "npm": "^5.8.0",
     "request": "^2.83.0"
   },
   "devDependencies": {
