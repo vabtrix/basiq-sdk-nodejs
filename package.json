@@ -17,9 +17,8 @@
     "dist/"
   ],
   "author": "Basiq.io",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
-    "npm": "^5.8.0",
     "request": "^2.83.0"
   },
   "devDependencies": {
