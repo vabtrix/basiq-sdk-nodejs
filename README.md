@@ -14,6 +14,7 @@ You can create a new API key on the [dashboard](http://dashboard.basiq.io).
 ## Changelog
 
 1.0.0 - SDK updated to version 2.0
+
 0.9.0beta - Initial release
 
 ## Getting started
