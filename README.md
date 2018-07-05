@@ -13,6 +13,7 @@ You can create a new API key on the [dashboard](http://dashboard.basiq.io).
 
 ## Changelog
 
+1.0.0 - SDK updated to version 2.0
 0.9.0beta - Initial release
 
 ## Getting started
@@ -38,6 +39,18 @@ const BasiqSDK = require("basiq-sdk-nodejs");
 
 (async function() {
         const session = await BasiqSDK.Session("YOUR_API_KEY");
+
+        const institutions = await session.getInstitutions();
+})();
+```
+
+You can specify the version of API when instantiating Session object. When the version is not specified, default version is 1.0.
+
+```js
+const BasiqSDK = require("basiq-sdk-nodejs");
+
+(async function() {
+        const session = await BasiqSDK.Session("YOUR_API_KEY", "2.0");
 
         const institutions = await session.getInstitutions();
 })();

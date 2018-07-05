@@ -1,10 +1,12 @@
 const API = require("./helpers/API"),
     BasiqUser = require("./services/User");
 
-const Session = function (apiKey) {
+const Session = function (apiKey, apiVersion) {
     if (!this) {
         return new Session(apiKey);
     }
+
+    apiVersion = apiVersion || "1.0";
 
     let token = null;
 
@@ -12,7 +14,7 @@ const Session = function (apiKey) {
 
     this.sessionTimestamp = null;
 
-    this.API = (new API("https://au-api.basiq.io")).setHeader("Authorization", "Basic " + apiKey).setHeader("basiq-version", "1.0");
+    this.API = (new API("https://au-api.basiq.io")).setHeader("Authorization", "Basic " + apiKey).setHeader("basiq-version", apiVersion);
 
     this.expired = function () {
         return Date.now() - self.sessionTimestamp > 1000 * 60 * 60;
