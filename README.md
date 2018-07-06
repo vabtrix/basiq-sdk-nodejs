@@ -7,11 +7,13 @@ This is the documentation for the Node.js SDK for Basiq.io API
 To view the API docs, [click here](https://basiq.io/api/).
 
 The SDK is organized to mirror the HTTP API's functionality and hierarchy.
-The top level object needed for SDKs functionality is the Session
-object which requires your API key to be instantiated.
+The top level object needed for SDKs functionality is the Session  
+object which requires your API key and may require API version to be instantiated.
 You can create a new API key on the [dashboard](http://dashboard.basiq.io).
 
 ## Changelog
+
+1.0.1 - Documentation updated
 
 1.0.0 - SDK updated to version 2.0
 
@@ -146,9 +148,14 @@ Services
 #### Session
 
 ##### Creating a new Session object
+(possible API versions: "1.0" and "2.0", default version: "1.0")
 
 ```js
 const session = await BasiqSDK.Session("YOUR_API_KEY");
+```
+
+```js
+const session = await BasiqSDK.Session("YOUR_API_KEY", "API_VERSION");
 ```
 
 #### UserService
