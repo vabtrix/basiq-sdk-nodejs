@@ -2,6 +2,8 @@ const BasiqJob = require("./Job");
 
 const Connection = function (data, service) {
     this.id = data.id ? data.id : null;
+    this.institution = data.institution ? data.institution : null;
+    this.accounts = data.accounts ? data.accounts : null;
 
     const self = this;
 

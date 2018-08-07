@@ -14,7 +14,8 @@
     "nodejs"
   ],
   "files": [
-    "index.js"
+    "index.js",
+    "index.js.map"
   ],
   "author": "Basiq.io",
   "license": "MIT",
