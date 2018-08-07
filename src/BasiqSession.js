@@ -3,7 +3,7 @@ const API = require("./helpers/API"),
 
 const Session = function (apiKey, apiVersion) {
     if (!this) {
-        return new Session(apiKey);
+        return new Session(apiKey, apiVersion);
     }
 
     apiVersion = apiVersion || "1.0";
@@ -54,7 +54,7 @@ const Session = function (apiKey, apiVersion) {
         return new BasiqUser(self).for(id);
     };
 
-    this.getInstitutons = function () {
+    this.getInstitutions = function () {
         return new Promise(function (res, rej) {
             return self.getToken().then(function () {
                 return self.API.send("institutions" , "GET");
@@ -66,7 +66,7 @@ const Session = function (apiKey, apiVersion) {
         });
     };
 
-    this.getInstituton = function (institutionId) {
+    this.getInstitution = function (institutionId) {
         return new Promise(function (res, rej) {
             return self.getToken().then(function () {
                 return self.API.send("institutions/" + institutionId , "GET");
