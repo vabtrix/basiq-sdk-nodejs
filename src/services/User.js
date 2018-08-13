@@ -152,10 +152,6 @@ const UserService = function (session) {
             return session.getToken().then(function () {
                 return session.API.send(url, "GET");
             }).then(function (body) {
-                if (!body.id) {
-                    rej(body);
-                }
-
                 res(body);
             }).catch(function (err) {
                 rej(err);
