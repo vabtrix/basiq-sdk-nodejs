@@ -61,7 +61,7 @@ const UserService = function (session) {
 
     this.new = function (data) {
         return new Promise(function (res, rej) {
-            if (!data || !data.email || !data.mobile) {
+            if (!data || (!data.email && !data.mobile)) {
                 rej(new Error("No email or phone number provided for user"));
             }
 
