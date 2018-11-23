@@ -40,7 +40,11 @@ API.prototype.send = function (path, method, data) {
                     return rej(new Error(body, response.statusCode));
                 }
             }
-            res(JSON.parse(body));
+            try {
+                res(JSON.parse(body));
+            } catch (err) {
+                res(null);
+            }
         });
     });
 };

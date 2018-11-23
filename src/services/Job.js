@@ -122,7 +122,7 @@ const JobService = function (session, connectionService) {
                 const credentialsStep = job.steps && job.steps[0];
 
                 if (credentialsStep.status && credentialsStep.status !== "in-progress" && credentialsStep.status !== "pending") {
-                    if (credentialsStep.status === "success") {
+                    if (credentialsStep.status === "success" || credentialsStep.status === "failed") {
                         return res(connectionService.get(job.getConnectionId()));
                     }
 
