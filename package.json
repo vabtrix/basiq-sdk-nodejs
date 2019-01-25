@@ -6,7 +6,7 @@
     "type": "git",
     "url": "https://github.com/basiqio/basiq-sdk-nodejs.git"
   },
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "webpack && uglifyjs --compress --mangle --output dist/index.js -- dist/index.js"
   },
