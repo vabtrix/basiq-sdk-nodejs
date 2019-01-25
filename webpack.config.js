@@ -18,6 +18,6 @@ module.exports = {
     library: "library",
     libraryTarget: "umd"
   },
-  externals: ["request"],
+  externals: ["request", "ajv"],
   devtool: "sourcemap"
 };
