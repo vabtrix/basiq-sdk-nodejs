@@ -41,7 +41,7 @@ API.prototype.send = function (path, method, data) {
                 }
             }
             try {
-                res(body ? JSON.parse(body) : {});
+                res(!!body ? JSON.parse(body) : {});
             } catch (err) {
                 rej(err);
             }
