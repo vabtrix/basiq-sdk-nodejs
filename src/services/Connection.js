@@ -13,8 +13,8 @@ const Connection = function(data, service) {
    */
   this.service = service;
 
-  this.update = function(password, securityCode) {
-    return self.service.update(self, password, securityCode);
+  this.update = function(password, securityCode, secondaryLoginId) {
+    return self.service.update(self, password, securityCode, secondaryLoginId);
   };
 
   this.refresh = function() {
@@ -41,7 +41,7 @@ const ConnectionService = function(session, user) {
     job: null
   };
 
-  this.new = function(institutionId, loginId, password, securityCode) {
+  this.new = function(institutionId, loginId, password, securityCode, secondaryLogin) {
     if (!loginId) {
       throw new Error("No user id provided: " + JSON.stringify(arguments));
     }
@@ -55,6 +55,7 @@ const ConnectionService = function(session, user) {
     loginId = loginId.trim();
     password = password.trim();
     securityCode = securityCode && securityCode.trim();
+    secondaryLoginId = secondaryLoginId && secondaryLoginId.trim();
 
     const payload = {
       loginId: loginId,
@@ -66,6 +67,10 @@ const ConnectionService = function(session, user) {
 
     if (securityCode && securityCode.length > 0) {
       payload["securityCode"] = securityCode;
+    }
+
+    if (secondaryLoginId && secondaryLoginId.length > 0) {
+      payload["secondaryLoginId"] = secondaryLoginId;
     }
 
     return new Promise(function(res, rej) {
@@ -110,7 +115,7 @@ const ConnectionService = function(session, user) {
     });
   };
 
-  this.update = function(connection, password) {
+  this.update = function(connection, password, securityCode, secondaryLoginId) {
     if (!password) {
       throw new Error("No password provided for connection update");
     }
@@ -122,18 +127,26 @@ const ConnectionService = function(session, user) {
     const payload = {
       password: password,
       institution: {
-        id: self.data.institution.id
+        id: connection.institution.id
       }
     };
+
+    if (securityCode && securityCode.length > 0) {
+      payload["securityCode"] = securityCode;
+    }
+
+    if (secondaryLoginId && secondaryLoginId.length > 0) {
+      payload["secondaryLoginId"] = secondaryLoginId;
+    }
 
     return new Promise(function(res, rej) {
       return session
         .getToken()
         .then(function() {
-          return session.API.send("users/" + user.id + "/connections/" + self.data.id, "POST", payload);
+          return session.API.send("users/" + user.id + "/connections/" + connection.id, "POST", payload);
         })
         .then(function(body) {
-          if (!body.id) {
+          if (!body || !body.id) {
             rej(body);
           }
 

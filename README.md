@@ -12,6 +12,8 @@ You can create a new API key on the [dashboard](http://dashboard.basiq.io).
 
 ## Changelog
 
+1.1.0 - Addeed secondaryLoginId parameter to connection API
+
 1.0.1 - Documentation updated
 
 1.0.0 - SDK updated to version 2.0
@@ -68,7 +70,7 @@ const BasiqSDK = require("basiq-sdk-nodejs");
 
         const user = session.forUser(userId)
 
-        const job = await user.createConnection(institutionId, loginId, password, securityCode);
+        const job = await user.createConnection(institutionId, loginId, password[, securityCode, secondaryLoginId]);
 
         const connection = await job.waitForCredentials(1000, 60);
 })();
@@ -266,13 +268,13 @@ const connection = connService.for(connection)
 ##### Create a new connection
 
 ```js
-const job = await connService.new(institutionId, loginId, password[, securityCode])
+const job = await connService.new(institutionId, loginId, password[, securityCode, secondaryLoginId])
 ```
 
 ##### Update connection
 
 ```js
-const job = await connService.update(connection, password);
+const job = await connService.update(connection, password[, securityCode, secondaryLoginId]);
 ```
 
 ##### Delete connection
@@ -387,7 +389,7 @@ job = await connection.refresh();
 ##### Update a connection
 
 ```js
-job = await connection.update(password);
+job = await connection.update(password[, securityCode, secondaryLoginId]);
 ```
 
 ##### Delete a connection

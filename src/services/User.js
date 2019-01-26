@@ -14,8 +14,8 @@ const User = function(data, service) {
 
   const self = this;
 
-  this.createConnection = function(institutionId, loginId, password, securityCode) {
-    return self.service.createConnection(self, institutionId, loginId, password, securityCode);
+  this.createConnection = function(institutionId, loginId, password, securityCode, secondaryLoginId) {
+    return self.service.createConnection(self, institutionId, loginId, password, securityCode, secondaryLoginId);
   };
 
   this.update = function(data) {
@@ -149,8 +149,8 @@ const UserService = function(session) {
     });
   };
 
-  this.createConnection = function(user, institutionId, loginId, password, securityCode) {
-    return new BasiqConnection(session, user).new(institutionId, loginId, password, securityCode);
+  this.createConnection = function(user, institutionId, loginId, password, securityCode, secondaryLoginId) {
+    return new BasiqConnection(session, user).new(institutionId, loginId, password, securityCode, secondaryLoginId);
   };
 
   this.getAllConnections = function(user, filter) {
