@@ -1,6 +1,6 @@
 {
   "name": "basiq-sdk-nodejs",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Node.js SDK Package for Basiq's API",
   "repository": {
     "type": "git",
