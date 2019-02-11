@@ -31,9 +31,7 @@ const Session = function(apiKey, apiVersion) {
 
     return new Promise(function(res, rej) {
       return self.API.setHeader("Authorization", "Basic " + apiKey)
-        .send("oauth2/token", "POST", {
-          grant_type: "client_credentials"
-        })
+        .send("token", "POST")
         .then(function(body) {
           self.sessionTimestamp = Date.now();
           token = body.access_token;
